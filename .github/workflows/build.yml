@@ -21,17 +21,15 @@ jobs:
 
     - name: Find and build Gradle project
       run: |
-        # Buscar la carpeta donde esta gradlew
-        GRADLEW_PATH=$(find . -name "gradlew" | head -n 1)
-        
+        GRADLEW_PATH=$(find . -maxdepth 3 -name "gradlew" | head -n 1)
         if [ -n "$GRADLEW_PATH" ]; then
           DIR=$(dirname "$GRADLEW_PATH")
           echo "Proyecto encontrado en: $DIR"
           cd "$DIR"
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug
         else
-          echo "No se encontró gradlew en el repositorio"
+          echo "No se encontró gradlew"
           exit 1
         fi
 
@@ -39,4 +37,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: '/**/app-debug.apk'
+        path: |
+          AppColegio/app/build/outputs/apk/debug/app-debug.apk
+          app/build/outputs/apk/debug/app-debug.apk
